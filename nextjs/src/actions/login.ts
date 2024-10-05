@@ -1,15 +1,11 @@
 "use server";
 import { type VerifyLoginPayloadParams, createAuth } from "thirdweb/auth";
-import { privateKeyAccount } from "thirdweb/wallets";
 import { client } from "@/lib/client";
 import { cookies } from "next/headers";
 import { env } from "@/env";
 
-const pk = env.THIRDWEB_ADMIN_PRIVATE_KEY;
-
 const thirdwebAuth = createAuth({
-  domain: process.env.NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN ?? "",
-  adminAccount: privateKeyAccount({ client, privateKey: pk }),
+  domain: env.NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN,
   client: client,
 });
 
