@@ -6,6 +6,7 @@ import { createWallet } from "thirdweb/wallets";
 import { polygon } from "thirdweb/chains";
 import { createThirdwebClient } from "thirdweb";
 import { env } from "@/env";
+import DecentraFileComponent from "../_components/send-tx";
 
 const wallets = [
     createWallet("io.metamask"),
@@ -41,6 +42,10 @@ export default function Overview() {
                         },
                     }}
                 />
+            </div>
+
+            <div>
+                <DecentraFileComponent />
             </div>
         </main>
     );

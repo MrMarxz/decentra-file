@@ -3,10 +3,14 @@ import { type VerifyLoginPayloadParams, createAuth } from "thirdweb/auth";
 import { client } from "@/lib/client";
 import { cookies } from "next/headers";
 import { env } from "@/env";
+import { generateAccount } from "thirdweb/wallets";
+
+const adminAccount = await generateAccount({ client });
 
 const thirdwebAuth = createAuth({
   domain: env.NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN,
   client: client,
+  adminAccount
 });
 
 export const generatePayload = thirdwebAuth.generatePayload;
