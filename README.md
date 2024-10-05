@@ -1,6 +1,6 @@
 # Decentra - File
 
-![Decentralized Storage Logo](./public/decentra.webp)
+![Decentralized Storage Logo](./nextjs/public/decentra.webp)
 
 This project allows users to upload files to a decentralized storage system, where the files are distributed across a network of nodes. The metadata for each file, including information such as file name, size, and upload timestamp, is stored on the blockchain, providing an immutable and verifiable record of the file's details.
 
