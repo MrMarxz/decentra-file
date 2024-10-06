@@ -1,45 +1,46 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ThumbsUp, ThumbsDown, FileText, Calendar, ArrowUpRightSquare, SquareArrowOutUpRight } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, FileText, Calendar, SquareArrowOutUpRight } from 'lucide-react';
 import { type Files } from '@prisma/client';
 import dayjs from 'dayjs';
 import { formatTransactionHash } from '@/lib/utils';
 
-// interface ExtendedFile extends Files {
-//     tags: string[] | null;
-// }
-
 const FileCard = ({ file }: { file: Files }) => {
+    const [isSpinning, setIsSpinning] = useState(false);
     const {
         name,
         fileName,
-        type,
+        createdAt,
         likes,
         dislikes,
         tags,
-        createdAt,
-        status,
         txHash,
     } = file;
 
     const cardVariants = {
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0 },
+        spin: { rotateY: 360 }
     };
 
     const formattedTags = tags as unknown as string[];
 
+    const handleDetailsClick = () => {
+        setIsSpinning(true);
+        setTimeout(() => setIsSpinning(false), 1000);
+    };
+
     return (
         <motion.div
             initial="hidden"
-            animate="visible"
+            animate={isSpinning ? "spin" : "visible"}
             variants={cardVariants}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
         >
             <Card className="w-full max-w-sm bg-white shadow-lg rounded-lg overflow-hidden">
                 <CardHeader className="bg-gradient-to-r from-blue-500 to-purple-500 text-white p-4">
@@ -92,7 +93,7 @@ const FileCard = ({ file }: { file: Files }) => {
                             <span>{dislikes}</span>
                         </Button>
                     </div>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" onClick={handleDetailsClick}>
                         Details
                     </Button>
                 </CardFooter>
