@@ -7,6 +7,7 @@ import { polygon } from "thirdweb/chains";
 import { createThirdwebClient } from "thirdweb";
 import { env } from "@/env";
 import DecentraFileComponent from "../_components/send-tx";
+import FileUploadForm from "../_components/upload";
 
 const wallets = [
     createWallet("io.metamask"),
@@ -46,6 +47,10 @@ export default function Overview() {
 
             <div>
                 <DecentraFileComponent />
+            </div>
+
+            <div className="flex justify-center w-[500px] mt-4">
+                <FileUploadForm />
             </div>
         </main>
     );

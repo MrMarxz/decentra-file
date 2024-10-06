@@ -14,6 +14,10 @@ export const env = createEnv({
     THIRDWEB_SECRET_KEY: z.string(),
     AUTH_PRIVATE_KEY: z.string(),
     THIRDWEB_ADMIN_PRIVATE_KEY: z.string(),
+    IPFS_DOMAIN: z.string(),
+    IPFS_API_KEY: z.string(),
+    IPFS_API_SECRET: z.string(),
+    IPFS_JWT: z.string(),
   },
 
   /**
@@ -39,6 +43,10 @@ export const env = createEnv({
     THIRDWEB_ADMIN_PRIVATE_KEY: process.env.THIRDWEB_ADMIN_PRIVATE_KEY,
     NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN: process.env.NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN,
     NEXT_PUBLIC_THIRDWEB_CLIENT_ID: process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID,
+    IPFS_DOMAIN: process.env.IPFS_DOMAIN,
+    IPFS_API_KEY: process.env.IPFS_API_KEY,
+    IPFS_API_SECRET: process.env.IPFS_API_SECRET,
+    IPFS_JWT: process.env.IPFS_JWT,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**
