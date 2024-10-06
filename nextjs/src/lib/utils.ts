@@ -28,3 +28,14 @@ export const convertToBase64 = (file: File): Promise<string> => {
     reader.onerror = error => reject(new Error(`FileReader error: ${JSON.stringify(error)}`));
   });
 };
+
+export function formatTransactionHash(hash: string | null): string {
+  if (!hash || hash.length < 10) {
+    return "No hash provided";
+  }
+
+  const prefix = hash.slice(0, 4);
+  const suffix = hash.slice(-4);
+
+  return `${prefix}...${suffix}`;
+}
