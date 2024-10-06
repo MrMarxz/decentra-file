@@ -9,8 +9,14 @@
 import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
+import { decodeJWT, encodeJWT } from "thirdweb/utils";
+import { createAuth, verifySignature } from "thirdweb/auth";
 
 import { db } from "@/server/db";
+import { createThirdwebClient } from "thirdweb";
+import { env } from "@/env";
+
+import { localhost } from "thirdweb/chains";
 
 /**
  * 1. CONTEXT
@@ -25,9 +31,19 @@ import { db } from "@/server/db";
  * @see https://trpc.io/docs/server/context
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
+
+  // Get the Bearer token from the Authorization header
+  const authorization = opts.headers.get("cookie");
+  console.log("Authorization: ", authorization);
+  const token = authorization?.replace("jwt=", "");
+
+  // Verify the token
+  const session = token ? decodeJWT(token) : null;
+
   return {
     db,
     ...opts,
+    session,
   };
 };
 

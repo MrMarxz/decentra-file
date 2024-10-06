@@ -2,9 +2,10 @@ import "@/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
-
+import { Toaster } from 'react-hot-toast';
 import { TRPCReactProvider } from "@/trpc/react";
 import { ThirdwebProvider } from "thirdweb/react";
+import Navbar from "@/components/custom/navbar";
 
 export const metadata: Metadata = {
   title: "Decentra-File",
@@ -20,7 +21,11 @@ export default function RootLayout({
       <body>
         <ThirdwebProvider>
           <TRPCReactProvider>
-            {children}
+            <Toaster />
+            <Navbar />
+            <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-blue-900 to-orange-400 text-white">
+              {children}
+            </main>
           </TRPCReactProvider>
         </ThirdwebProvider>
       </body>

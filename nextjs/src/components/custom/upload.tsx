@@ -49,9 +49,11 @@ const FileUploadForm: React.FC = () => {
 
       const result = await upload.mutateAsync({
         name: file.name,
+        fileName: "",
         type: file.type,
         size: file.size,
-        data: base64
+        data: base64,
+        tags: []
       });
 
       setUploadStatus(`File "${file.name}" uploaded successfully!`);

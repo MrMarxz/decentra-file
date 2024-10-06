@@ -10,7 +10,7 @@ interface CustomFileInputProps {
   maxSize?: number;
 }
 
-const CustomFileInput: React.FC<CustomFileInputProps> = ({ 
+const FileInput: React.FC<CustomFileInputProps> = ({ 
   onFileSelect, 
   accept = 'image/*,application/pdf', 
   maxSize = 5 * 1024 * 1024 // 5MB default
@@ -75,4 +75,4 @@ const CustomFileInput: React.FC<CustomFileInputProps> = ({
   );
 };
 
-export default CustomFileInput;
+export default FileInput;

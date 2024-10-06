@@ -1,9 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use server";
 import { type VerifyLoginPayloadParams, createAuth } from "thirdweb/auth";
 import { client } from "@/lib/client";
 import { cookies } from "next/headers";
 import { env } from "@/env";
 import { generateAccount } from "thirdweb/wallets";
+import { db } from "@/server/db";
 
 const adminAccount = await generateAccount({ client });
 
@@ -20,8 +24,27 @@ export async function login(payload: VerifyLoginPayloadParams) {
   if (verifiedPayload.valid) {
     const jwt = await thirdwebAuth.generateJWT({
       payload: verifiedPayload.payload,
+      context: { adminAccount }
     });
     cookies().set("jwt", jwt);
+
+    // Check if the account is in the database
+    const address = payload.payload.address;
+
+    const existingAccount = await db.accounts.findFirst({
+      where: {
+        address
+      }
+    });
+
+    // If the account is not in the database, add it
+    if (!existingAccount) {
+      await db.accounts.create({
+        data: {
+          address
+        }
+      });
+    }
   }
 }
 

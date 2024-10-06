@@ -10,11 +10,34 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Post {
+model Accounts {
     id        Int      @id @default(autoincrement())
-    name      String
+    address   String   @unique
+    username  String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@index([name])
+    Files        Files[]
+}
+
+enum ProcessingStatus {
+    UPLOADED_FILE
+    TRANSACTION_COMPLETE
+}
+
+model Files {
+    id         Int      @id @default(autoincrement())
+    name       String
+    fileName   String
+    cid        String
+    type       String
+    likes      Int      @default(0)
+    dislikes   Int      @default(0)
+    tags       Json
+    uploadedBy Int
+    txHash     String?
+    status     ProcessingStatus @default(UPLOADED_FILE)
+    account    Accounts @relation(fields: [uploadedBy], references: [id])
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
 }
