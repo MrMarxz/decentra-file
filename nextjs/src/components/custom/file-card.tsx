@@ -9,6 +9,7 @@ import { ThumbsUp, ThumbsDown, FileText, Calendar, SquareArrowOutUpRight } from 
 import { type Files } from '@prisma/client';
 import dayjs from 'dayjs';
 import { formatTransactionHash } from '@/lib/utils';
+import FileDetailsDialog from './file-details-dialog';
 
 const FileCard = ({ file }: { file: Files }) => {
     const [isSpinning, setIsSpinning] = useState(false);
@@ -43,7 +44,7 @@ const FileCard = ({ file }: { file: Files }) => {
             transition={{ duration: 0.6, ease: "easeInOut" }}
         >
             <Card className="w-full max-w-sm bg-white shadow-lg rounded-lg overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-blue-500 to-purple-500 text-white p-4">
+                <CardHeader className="bg-[#007F7F] text-white p-4">
                     <CardTitle className="text-xl font-bold truncate">{name}</CardTitle>
                 </CardHeader>
                 <CardContent className="p-4">
@@ -93,9 +94,9 @@ const FileCard = ({ file }: { file: Files }) => {
                             <span>{dislikes}</span>
                         </Button>
                     </div>
-                    <Button variant="outline" size="sm" onClick={handleDetailsClick}>
-                        Details
-                    </Button>
+                    
+                    {/* DETAILS DIALOG */}
+                    <FileDetailsDialog file={file} />
                 </CardFooter>
             </Card>
         </motion.div>

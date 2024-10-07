@@ -23,7 +23,7 @@ export default function RootLayout({
           <TRPCReactProvider>
             <Toaster />
             <Navbar />
-            <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-blue-900 to-orange-400 text-white">
+            <main className="flex min-h-screen flex-col items-center bg-[#333333] text-white">
               {children}
             </main>
           </TRPCReactProvider>
