@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { z } from "zod";
-import { PinataSDK } from "pinata";
+import { PinataSDK } from "pinata-web3";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
 import { env } from "@/env";
 import { base64ToFile } from "@/lib/utils";
@@ -50,7 +50,7 @@ export const fileRouter = createTRPCRouter({
         data: {
           name: input.name,
           fileName: input.fileName,
-          cid: upload.cid,
+          cid: upload.IpfsHash,
           type: input.type,
           tags: input.tags,
           uploadedBy: account.id
@@ -58,7 +58,7 @@ export const fileRouter = createTRPCRouter({
       })
       //#endregion
 
-      return upload.cid;
+      return upload.IpfsHash;
     }),
   postTransaction: protectedProcedure
     .input(z.object({
@@ -327,7 +327,20 @@ export const fileRouter = createTRPCRouter({
           file
         }));
       }
-
-
     }),
+
+  getIPFSfile: publicProcedure
+    .input(z.object({
+      cid: z.string()
+    }))
+    .query(async ({ input }) => {
+      const pinata = new PinataSDK({
+        pinataJwt: env.IPFS_JWT,
+        pinataGateway: env.IPFS_DOMAIN,
+      });
+
+      const file = await pinata.gateways.get(input.cid);
+
+      return file;
+    })
 });
