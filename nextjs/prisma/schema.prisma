@@ -6,38 +6,44 @@ generator client {
 }
 
 datasource db {
-    provider = "mysql"
+    provider = "postgresql"
     url      = env("DATABASE_URL")
 }
 
 model Accounts {
-    id        Int      @id @default(autoincrement())
+    id        String   @id @default(cuid())
     address   String   @unique
     username  String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    Files        Files[]
+    likedFiles    Files[] @relation("LikedFiles")
+    dislikedFiles Files[] @relation("DislikedFiles")
+    Files         Files[] @relation("UploadedFiles")
 }
 
 enum ProcessingStatus {
     UPLOADED_FILE
     TRANSACTION_COMPLETE
+    PINNED
 }
 
 model Files {
-    id         Int      @id @default(autoincrement())
+    id         String           @id @default(cuid())
     name       String
     fileName   String
-    cid        String
+    cid        String           @unique
     type       String
-    likes      Int      @default(0)
-    dislikes   Int      @default(0)
-    tags       Json
-    uploadedBy Int
+    likes      Int              @default(0)
+    dislikes   Int              @default(0)
+    tags       String[]
     txHash     String?
     status     ProcessingStatus @default(UPLOADED_FILE)
-    account    Accounts @relation(fields: [uploadedBy], references: [id])
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
+    uploadedBy String
+    account    Accounts         @relation(fields: [uploadedBy], references: [id], name: "UploadedFiles")
+    createdAt  DateTime         @default(now())
+    updatedAt  DateTime         @updatedAt
+
+    likedBy    Accounts[] @relation("LikedFiles")
+    dislikedBy Accounts[] @relation("DislikedFiles")
 }

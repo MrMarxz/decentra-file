@@ -1,24 +1,57 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ThumbsUp, ThumbsDown, FileText, Calendar, SquareArrowOutUpRight } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, FileText, Calendar, SquareArrowOutUpRight, RotateCw } from 'lucide-react';
 import { type Files } from '@prisma/client';
 import dayjs from 'dayjs';
 import { formatTransactionHash } from '@/lib/utils';
 import FileDetailsDialog from './file-details-dialog';
+import { api } from '@/trpc/react';
+import toast from 'react-hot-toast';
 
-const FileCard = ({ file }: { file: Files }) => {
-    const [isSpinning, setIsSpinning] = useState(false);
+const FileCard = ({ file, hasPreviouslyLiked, hasPreviouslyDisliked }: { file: Files, hasPreviouslyLiked: boolean, hasPreviouslyDisliked: boolean }) => {
+    const utils = api.useUtils();
+    const [hasLiked, setHasLiked] = useState(false);
+    const [hasDisliked, setHasDisliked] = useState(false);
+    const [likedAmount, setLikedAmount] = useState(file.likes);
+    const [dislikedAmount, setDislikedAmount] = useState(file.dislikes);
+    const likeFile = api.files.like.useMutation({
+        onSuccess: () => {
+            toast.success('Liked file');
+            setHasLiked(true);
+            setLikedAmount(likedAmount + 1);
+            if (hasDisliked) {
+                setHasDisliked(false);
+                setDislikedAmount(dislikedAmount - 1);
+            }
+
+        },
+        onSettled: () => {
+            void utils.files.getCommunityFiles.invalidate();
+        }
+    });
+    const dislikeFile = api.files.dislike.useMutation({
+        onSuccess: () => {
+            toast.success('Disliked file');
+            setHasDisliked(true);
+            setDislikedAmount(dislikedAmount + 1);
+            if (hasLiked) {
+                setHasLiked(false);
+                setLikedAmount(likedAmount - 1);
+            }
+        },
+        onSettled: () => {
+            void utils.files.getCommunityFiles.invalidate();
+        }
+    });
     const {
         name,
         fileName,
         createdAt,
-        likes,
-        dislikes,
         tags,
         txHash,
     } = file;
@@ -29,17 +62,37 @@ const FileCard = ({ file }: { file: Files }) => {
         spin: { rotateY: 360 }
     };
 
-    const formattedTags = tags as unknown as string[];
+    const handleLike = async () => {
+        try {
+            await likeFile.mutateAsync({ id: file.id });
+        } catch (error: any) {
+            const message = error.message ?? 'Oops! Something went wrong. Please try again.';
+            toast.error(message);
+        }
+    }
 
-    const handleDetailsClick = () => {
-        setIsSpinning(true);
-        setTimeout(() => setIsSpinning(false), 1000);
-    };
+    const handleDislike = async () => {
+        try {
+            await dislikeFile.mutateAsync({ id: file.id });
+        } catch (error: any) {
+            const message = error.message ?? 'Oops! Something went wrong. Please try again.';
+            toast.error(message);
+        }
+    }
+
+    useEffect(() => {
+        setHasLiked(hasPreviouslyLiked);
+    }, [hasPreviouslyLiked]);
+
+    useEffect(() => {
+        setHasDisliked(hasPreviouslyDisliked);
+    }, [hasPreviouslyDisliked]);
+
 
     return (
         <motion.div
             initial="hidden"
-            animate={isSpinning ? "spin" : "visible"}
+            animate="visible"
             variants={cardVariants}
             transition={{ duration: 0.6, ease: "easeInOut" }}
         >
@@ -59,7 +112,7 @@ const FileCard = ({ file }: { file: Files }) => {
                         </span>
                     </div>
                     <div className="flex flex-wrap gap-2 mt-2">
-                        {formattedTags ? formattedTags.map((tag, index) => (
+                        {tags ? tags.map((tag, index) => (
                             <Badge key={index} variant="secondary" className="text-xs">
                                 {tag}
                             </Badge>
@@ -85,21 +138,46 @@ const FileCard = ({ file }: { file: Files }) => {
                 </CardContent>
                 <CardFooter className="bg-gray-50 p-4 flex justify-between items-center">
                     <div className="flex items-center space-x-4">
-                        <Button variant="ghost" size="sm" className="flex items-center">
-                            <ThumbsUp className="w-4 h-4 mr-1" />
-                            <span>{likes}</span>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className={`flex items-center`}
+                            disabled={hasLiked}
+                            onClick={handleLike}
+                        >
+                            {likeFile.isPending ? (
+                                <RotateCw className="animate-spin w-4 h-4 mr-1" />
+                            ) : (
+                                <>
+                                    <ThumbsUp className={`w-4 h-4 mr-1 ${hasLiked ? "text-gray-500 fill-current" : ""}`} />
+                                    <span>{likedAmount}</span>
+                                </>
+                            )}
                         </Button>
-                        <Button variant="ghost" size="sm" className="flex items-center">
-                            <ThumbsDown className="w-4 h-4 mr-1" />
-                            <span>{dislikes}</span>
+
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className={`flex items-center`}
+                            disabled={hasDisliked}
+                            onClick={handleDislike}
+                        >
+                            {dislikeFile.isPending ? (
+                                <RotateCw className="animate-spin w-4 h-4 mr-1" />
+                            ) : (
+                                <>
+                                    <ThumbsDown className={`w-4 h-4 mr-1 ${hasDisliked ? "text-gray-500 fill-current" : ""}`} />
+                                    <span>{dislikedAmount}</span>
+                                </>
+                            )}
                         </Button>
                     </div>
-                    
+
                     {/* DETAILS DIALOG */}
                     <FileDetailsDialog file={file} />
                 </CardFooter>
             </Card>
-        </motion.div>
+        </motion.div >
     );
 };
 

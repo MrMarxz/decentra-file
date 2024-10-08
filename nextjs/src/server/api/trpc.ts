@@ -6,7 +6,7 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { initTRPC } from "@trpc/server";
+import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 import { decodeJWT, encodeJWT } from "thirdweb/utils";
@@ -34,11 +34,20 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
 
   // Get the Bearer token from the Authorization header
   const authorization = opts.headers.get("cookie");
-  console.log("Authorization: ", authorization);
+  // console.log("Authorization: ", authorization);
   const token = authorization?.replace("jwt=", "");
 
   // Verify the token
-  const session = token ? decodeJWT(token) : null;
+  let session = null;
+  if (token) {
+    // console.log("Token: ", token);
+    const decoded = decodeJWT(token);
+    if (decoded) {
+      session = decoded;
+    }
+  }
+
+  // const session = token ? decodeJWT(token) : null;
 
   return {
     db,
@@ -120,3 +129,23 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  * are logged in.
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
+
+/**
+ * Protected (authenticated) procedure
+ *
+ * If you want a query or mutation to ONLY be accessible to logged in users, use this. It verifies
+ * the session is valid and guarantees `ctx.session.user` is not null.
+ *
+ * @see https://trpc.io/docs/procedures
+ */
+export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
+  const session = ctx.session;
+  if (!session?.payload.sub) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  return next({
+    ctx: {
+      session: { ...ctx.session, walletAddress: session.payload.sub },
+    },
+  });
+});

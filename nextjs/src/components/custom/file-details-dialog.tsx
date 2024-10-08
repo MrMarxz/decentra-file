@@ -23,8 +23,6 @@ const FileDetailsDialog = ({ file }: { file: Files }) => {
 
     const ipfsUrl = `https://ipfs.io/ipfs/${cid}`;
 
-    const formattedTags = tags as unknown as string[];
-
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -36,7 +34,7 @@ const FileDetailsDialog = ({ file }: { file: Files }) => {
                 <DialogHeader>
                     <DialogTitle className="text-2xl font-bold">{name}</DialogTitle>
                     <div className="flex flex-wrap gap-2 mt-2">
-                        {formattedTags ? formattedTags.map((tag) => (
+                        {tags ? tags.map((tag) => (
                             <Badge key={tag} variant="default">
                                 {tag}
                             </Badge>

@@ -42,6 +42,7 @@ interface FileData {
 
 export default function UploadFileDialog() {
   const walletStore = useWallet();
+  const utils = api.useUtils();
   const contract = getContract({
     client,
     address: contractAddress,
@@ -153,6 +154,7 @@ export default function UploadFileDialog() {
         txHash,
         cid: fileData.cid
       });
+      void utils.files.getCommunityFiles.invalidate();
       toast.success('File uploaded successfully!');
     } catch (error: any) {
       const message = error.message ?? 'An error occurred while processing the transaction.';

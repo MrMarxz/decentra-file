@@ -12,7 +12,10 @@
     "dev": "next dev",
     "postinstall": "prisma generate",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+
+    "start-chain": "cd ../contract && npx hardhat node",
+    "deploy": "cd ../contract && npx hardhat ignition deploy ./ignition/modules/DecentraFileModule.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.14.0",
