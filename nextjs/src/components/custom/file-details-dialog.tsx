@@ -173,8 +173,8 @@ const FileDetailsDialog = ({ file, accountUsername, like, dislike }: FileDetails
                             </div>
                             <div className="w-full h-96 bg-gray-100 rounded-lg overflow-hidden">
                                 {type.startsWith('image/') ? (
-                                    // <img src={ipfsUrl} alt={name} className="w-full h-full object-contain" />
-                                    <Image src={ipfsUrl} alt={name} layout="fill" objectFit="contain" />
+                                    <img src={ipfsUrl} alt={name} className="w-full h-full object-contain" />
+                                    // <Image src={ipfsUrl} alt={name} layout="fill" objectFit="contain" />
                                 ) : type === 'application/pdf' ? (
                                     <iframe src={ipfsUrl} title={name} className="w-full h-full" />
                                 ) : (
