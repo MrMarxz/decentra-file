@@ -25,7 +25,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from '@/components/ui/textarea';
 import FileInput from './file-upload-input';
 import { api } from '@/trpc/react';
-import { RefreshCw, Plus } from 'lucide-react';
+import { RefreshCw, Plus, Upload } from 'lucide-react';
 import useWallet from '@/store/useWallet';
 
 const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
@@ -186,10 +186,12 @@ export default function UploadFileDialog() {
     <Dialog>
       <DialogTrigger asChild>
         <Button
-          className="fixed bottom-4 right-4 rounded-full w-12 h-12 p-0 bg-blue-900"
+          variant="outline"
           size="icon"
+          className="w-10 h-10 rounded-full shadow-lg transition-all duration-200 ease-in-out bg-primary text-white hover:text-white bg-[#007F7F] hover:bg-[#007F7F]"
         >
-          <Plus className="h-6 w-6" />
+          <Upload className="h-5 w-5" />
+          <span className="sr-only">Upload File</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
