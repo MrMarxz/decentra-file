@@ -13,7 +13,17 @@ import FileDetailsDialog from './file-details-dialog';
 import { api } from '@/trpc/react';
 import toast from 'react-hot-toast';
 
-const FileCard = ({ file, hasPreviouslyLiked, hasPreviouslyDisliked }: { file: Files, hasPreviouslyLiked: boolean, hasPreviouslyDisliked: boolean }) => {
+const FileCard = ({ 
+    file, 
+    hasPreviouslyLiked, 
+    hasPreviouslyDisliked,
+    accountUsername
+}: { 
+    file: Files, 
+    hasPreviouslyLiked: boolean, 
+    hasPreviouslyDisliked: boolean,
+    accountUsername: string | null
+}) => {
     const utils = api.useUtils();
     const [hasLiked, setHasLiked] = useState(false);
     const [hasDisliked, setHasDisliked] = useState(false);
@@ -174,7 +184,22 @@ const FileCard = ({ file, hasPreviouslyLiked, hasPreviouslyDisliked }: { file: F
                     </div>
 
                     {/* DETAILS DIALOG */}
-                    <FileDetailsDialog file={file} />
+                    <FileDetailsDialog 
+                        file={file} 
+                        accountUsername={accountUsername} 
+                        like={{
+                            hasLiked,
+                            likedAmount,
+                            handleLike: () => { void handleLike() },
+                            isLoading: likeFile.isPending
+                        }}
+                        dislike={{
+                            hasDisliked,
+                            dislikedAmount,
+                            handleDislike: () => { void handleDislike() },
+                            isLoading: dislikeFile.isPending
+                        }} 
+                    />
                 </CardFooter>
             </Card>
         </motion.div >

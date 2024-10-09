@@ -141,7 +141,7 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
 export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
   const session = ctx.session;
   if (!session?.payload.sub) {
-    throw new TRPCError({ code: "UNAUTHORIZED" });
+    throw new TRPCError({ code: "UNAUTHORIZED", message: "Please connect your wallet first." });
   }
   return next({
     ctx: {

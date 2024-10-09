@@ -21,6 +21,7 @@ export default async function Overview() {
                             file={data.file}
                             hasPreviouslyLiked={data.hasLiked}
                             hasPreviouslyDisliked={data.hasDisliked}
+                            accountUsername={data.accountUsername}
                         />
                     </div>
                 ))}

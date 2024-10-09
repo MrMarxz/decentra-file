@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import WordList from "./wordlist.json";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -38,4 +39,24 @@ export function formatTransactionHash(hash: string | null): string {
   const suffix = hash.slice(-4);
 
   return `${prefix}...${suffix}`;
+}
+
+export function generateUsername(): string {
+  const capitalize = (word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+  const wordlist = WordList;
+
+  const getRandomWord = (words: string[]): string => {
+    const word = words[Math.floor(Math.random() * words.length)];
+    if (typeof word !== 'string') {
+      throw new Error('WordList contains non-string values');
+    }
+    return word;
+  };
+
+  const adjective = capitalize(getRandomWord(wordlist.adjectives));
+  const noun = capitalize(getRandomWord(wordlist.nouns));
+  
+  const username = `${adjective}${noun}${Math.floor(Math.random() * 100)}`;
+
+  return username;
 }

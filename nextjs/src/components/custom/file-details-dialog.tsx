@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import {
     Tooltip,
@@ -9,7 +9,7 @@ import {
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ThumbsUp, ThumbsDown, Calendar, User, Hash, FileType, Copy, HelpCircle } from "lucide-react";
+import { ThumbsUp, ThumbsDown, Calendar, User, Hash, FileType, Copy, HelpCircle, RotateCw } from "lucide-react";
 import { type Files } from '@prisma/client';
 import Image from 'next/image';
 import dayjs from 'dayjs';
@@ -19,15 +19,37 @@ import Link from 'next/link';
 import { api } from '@/trpc/react';
 import { env } from '@/env';
 
-const FileDetailsDialog = ({ file }: { file: Files }) => {
+interface FileDetailsDialogProps {
+    file: Files;
+    accountUsername: string | null;
+    like: {
+        hasLiked: boolean;
+        likedAmount: number;
+        handleLike: () => void;
+        isLoading: boolean;
+    }
+    dislike: {
+        hasDisliked: boolean;
+        dislikedAmount: number;
+        handleDislike: () => void;
+        isLoading: boolean;
+    }
+}
+
+const FileDetailsDialog = ({ file, accountUsername, like, dislike }: FileDetailsDialogProps) => {
+    const [likes, setLikes] = useState(like.likedAmount);
+    const [dislikes, setDislikes] = useState(dislike.dislikedAmount);
+    const [hasLiked, setHasLiked] = useState(like.hasLiked);
+    const [hasDisliked, setHasDisliked] = useState(dislike.hasDisliked);
+    const [isLikeLoading, setIsLikeLoading] = useState(like.isLoading);
+    const [isDislikeLoading, setIsDislikeLoading] = useState(dislike.isLoading);
+
     const ipfsUrl = `https://${env.NEXT_PUBLIC_IPFS_DOMAIN}/ipfs/${file.cid}`;
     const {
         name,
         fileName,
         cid,
         type,
-        likes,
-        dislikes,
         tags,
         uploadedBy,
         txHash,
@@ -44,6 +66,15 @@ const FileDetailsDialog = ({ file }: { file: Files }) => {
             toast.error('Failed to copy to clipboard');
         }
     }
+
+    useEffect(() => {
+        setLikes(like.likedAmount);
+        setDislikes(dislike.dislikedAmount);
+        setHasLiked(like.hasLiked);
+        setHasDisliked(dislike.hasDisliked);
+        setIsLikeLoading(like.isLoading);
+        setIsDislikeLoading(dislike.isLoading);
+    }, [like.likedAmount, dislike.dislikedAmount, like.hasLiked, dislike.hasDisliked, like.isLoading, dislike.isLoading]);
 
     return (
         <Dialog>
@@ -72,7 +103,7 @@ const FileDetailsDialog = ({ file }: { file: Files }) => {
                                 <div className="flex flex-col gap-y-4 justify-between">
                                     <div className="flex items-center space-x-2">
                                         <User className="w-5 h-5 text-gray-500" />
-                                        <span>Uploaded by: {uploadedBy}</span>
+                                        <span>Uploaded by: {accountUsername ? accountUsername : "Unknown User"}</span>
                                     </div>
                                     <div className="flex items-center space-x-2">
                                         <FileType className="w-5 h-5 text-gray-500" />
@@ -142,8 +173,8 @@ const FileDetailsDialog = ({ file }: { file: Files }) => {
                             </div>
                             <div className="w-full h-96 bg-gray-100 rounded-lg overflow-hidden">
                                 {type.startsWith('image/') ? (
-                                    <img src={ipfsUrl} alt={name} className="w-full h-full object-contain" />
-                                    // <Image src={ipfsUrl} alt={name} layout="fill" objectFit="contain" />
+                                    // <img src={ipfsUrl} alt={name} className="w-full h-full object-contain" />
+                                    <Image src={ipfsUrl} alt={name} layout="fill" objectFit="contain" />
                                 ) : type === 'application/pdf' ? (
                                     <iframe src={ipfsUrl} title={name} className="w-full h-full" />
                                 ) : (
@@ -156,13 +187,35 @@ const FileDetailsDialog = ({ file }: { file: Files }) => {
                     </CardContent>
                     <CardFooter className="justify-between p-6">
                         <div className="flex items-center space-x-4">
-                            <Button variant="likeButton" size="sm">
-                                <ThumbsUp className="w-4 h-4 mr-2" />
-                                {likes}
+                            <Button
+                                variant="likeButton"
+                                size="sm"
+                                disabled={isLikeLoading || hasLiked}
+                                onClick={like.handleLike}
+                            >
+                                {isLikeLoading ? (
+                                    <RotateCw className="animate-spin w-4 h-4 mr-1" />
+                                ) : (
+                                    <>
+                                        <ThumbsUp className="w-4 h-4 mr-2" />
+                                        {likes}
+                                    </>
+                                )}
                             </Button>
-                            <Button variant="dislikeButton" size="sm">
-                                <ThumbsDown className="w-4 h-4 mr-2" />
-                                {dislikes}
+                            <Button
+                                variant="dislikeButton"
+                                size="sm"
+                                disabled={isDislikeLoading || hasDisliked}
+                                onClick={dislike.handleDislike}
+                            >
+                                {isDislikeLoading ? (
+                                    <RotateCw className="animate-spin w-4 h-4 mr-1" />
+                                ) : (
+                                    <>
+                                        <ThumbsDown className="w-4 h-4 mr-2" />
+                                        {dislikes}
+                                    </>
+                                )}
                             </Button>
                         </div>
                         <Button onClick={() => window.open(ipfsUrl, '_blank')} className="bg-[#007F7F] hover:bg-[#006666]">

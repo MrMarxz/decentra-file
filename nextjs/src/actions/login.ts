@@ -8,6 +8,7 @@ import { cookies } from "next/headers";
 import { env } from "@/env";
 import { generateAccount } from "thirdweb/wallets";
 import { db } from "@/server/db";
+import { generateUsername } from "@/lib/utils";
 
 const adminAccount = await generateAccount({ client });
 
@@ -39,9 +40,11 @@ export async function login(payload: VerifyLoginPayloadParams) {
 
     // If the account is not in the database, add it
     if (!existingAccount) {
+      const username = generateUsername();
       await db.accounts.create({
         data: {
-          address
+          address,
+          username
         }
       });
     }

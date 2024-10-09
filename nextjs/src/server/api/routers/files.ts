@@ -292,12 +292,16 @@ export const fileRouter = createTRPCRouter({
           txHash: {
             not: null,
           }
+        },
+        include: {
+          account: true
         }
       });
 
       if (!accountAddress) {
         // Create return object
         return files.map((file) => ({
+          accountUsername: file.account.username,
           hasLiked: false,
           hasDisliked: false,
           file
@@ -322,6 +326,7 @@ export const fileRouter = createTRPCRouter({
 
         // Create return object
         return files.map((file) => ({
+          accountUsername: file.account.username,
           hasLiked: account.likedFiles.some((likedFile) => likedFile.id === file.id),
           hasDisliked: account.dislikedFiles.some((dislikedFile) => dislikedFile.id === file.id),
           file
