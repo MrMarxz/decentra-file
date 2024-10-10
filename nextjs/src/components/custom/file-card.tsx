@@ -41,7 +41,6 @@ const FileCard = ({
                 setHasDisliked(false);
                 setDislikedAmount(dislikedAmount - 1);
             }
-
         },
         onSettled: () => {
             void utils.files.getCommunityFiles.invalidate();
@@ -72,7 +71,6 @@ const FileCard = ({
     const cardVariants = {
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0 },
-        spin: { rotateY: 360 }
     };
 
     const handleLike = async () => {
@@ -101,69 +99,70 @@ const FileCard = ({
         setHasDisliked(hasPreviouslyDisliked);
     }, [hasPreviouslyDisliked]);
 
-
     return (
         <motion.div
             initial="hidden"
             animate="visible"
             variants={cardVariants}
             transition={{ duration: 0.6, ease: "easeInOut" }}
+            className="w-full sm:w-[320px] md:w-[360px] lg:w-[400px] mx-auto"
         >
-            <Card className="w-full max-w-sm bg-white shadow-lg rounded-lg overflow-hidden">
-                <CardHeader className="bg-[#007F7F] text-white p-4">
-                    <CardTitle className="text-xl font-bold truncate">{name}</CardTitle>
+            <Card className="bg-white shadow-lg rounded-lg overflow-hidden h-full flex flex-col">
+                <CardHeader className="bg-[#007F7F] text-white p-3 sm:p-4">
+                    <CardTitle className="text-lg sm:text-xl font-bold truncate">{name}</CardTitle>
                 </CardHeader>
-                <CardContent className="p-4">
+                <CardContent className="p-3 sm:p-4 flex-grow">
                     <div className="flex items-center mb-2">
-                        <FileText className="w-5 h-5 mr-2 text-gray-500" />
-                        <span className="text-sm text-gray-600 truncate">{fileName}</span>
+                        <FileText className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-gray-500 flex-shrink-0" />
+                        <span className="text-xs sm:text-sm text-gray-600 truncate">{fileName}</span>
                     </div>
                     <div className="flex items-center mb-2">
-                        <Calendar className="w-5 h-5 mr-2 text-gray-500" />
-                        <span className="text-sm text-gray-600">
+                        <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-gray-500 flex-shrink-0" />
+                        <span className="text-xs sm:text-sm text-gray-600">
                             {dayjs(createdAt).format('MMM D, YYYY')}
                         </span>
                     </div>
-                    <div className="flex flex-wrap gap-2 mt-2">
+                    <div className="flex flex-wrap gap-1 mt-2">
                         {tags ? tags.map((tag, index) => (
-                            <Badge key={index} variant="secondary" className="text-xs">
+                            <Badge key={index} variant="secondary" className="text-xs px-1 py-0.5">
                                 {tag}
                             </Badge>
                         )) : (
-                            <Badge variant="secondary" className="text-xs">
+                            <Badge variant="secondary" className="text-xs px-1 py-0.5">
                                 No tags
                             </Badge>
                         )}
                     </div>
-                    <div className="mt-4">
+                    <div className="mt-3">
                         <a
                             href={transactionUrl}
                             target="_blank"
-                            className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold 
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold 
                             bg-emerald-100 text-emerald-800 
                             hover:bg-emerald-200 hover:text-emerald-900 
                             transition-colors duration-300 ease-in-out 
                             shadow-sm hover:shadow-md"
                         >
                             {formatTransactionHash(txHash)}
-                            <SquareArrowOutUpRight className="w-3 h-3 ml-1.5" />
+                            <SquareArrowOutUpRight className="w-3 h-3 ml-1" />
                         </a>
                     </div>
                 </CardContent>
-                <CardFooter className="bg-gray-50 p-4 flex justify-between items-center">
-                    <div className="flex items-center space-x-4">
+                <CardFooter className="bg-gray-50 p-3 sm:p-4 flex justify-between items-center">
+                    <div className="flex items-center space-x-2 sm:space-x-4">
                         <Button
                             variant="ghost"
                             size="sm"
-                            className={`flex items-center`}
+                            className={`flex items-center text-xs sm:text-sm p-1 sm:p-2`}
                             disabled={hasLiked}
                             onClick={handleLike}
                         >
                             {likeFile.isPending ? (
-                                <RotateCw className="animate-spin w-4 h-4 mr-1" />
+                                <RotateCw className="animate-spin w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                             ) : (
                                 <>
-                                    <ThumbsUp className={`w-4 h-4 mr-1 ${hasLiked ? "text-gray-500 fill-current" : ""}`} />
+                                    <ThumbsUp className={`w-3 h-3 sm:w-4 sm:h-4 mr-1 ${hasLiked ? "text-gray-500 fill-current" : ""}`} />
                                     <span>{likedAmount}</span>
                                 </>
                             )}
@@ -172,22 +171,21 @@ const FileCard = ({
                         <Button
                             variant="ghost"
                             size="sm"
-                            className={`flex items-center`}
+                            className={`flex items-center text-xs sm:text-sm p-1 sm:p-2`}
                             disabled={hasDisliked}
                             onClick={handleDislike}
                         >
                             {dislikeFile.isPending ? (
-                                <RotateCw className="animate-spin w-4 h-4 mr-1" />
+                                <RotateCw className="animate-spin w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                             ) : (
                                 <>
-                                    <ThumbsDown className={`w-4 h-4 mr-1 ${hasDisliked ? "text-gray-500 fill-current" : ""}`} />
+                                    <ThumbsDown className={`w-3 h-3 sm:w-4 sm:h-4 mr-1 ${hasDisliked ? "text-gray-500 fill-current" : ""}`} />
                                     <span>{dislikedAmount}</span>
                                 </>
                             )}
                         </Button>
                     </div>
 
-                    {/* DETAILS DIALOG */}
                     <FileDetailsDialog 
                         file={file} 
                         accountUsername={accountUsername} 
@@ -206,7 +204,7 @@ const FileCard = ({
                     />
                 </CardFooter>
             </Card>
-        </motion.div >
+        </motion.div>
     );
 };
 
