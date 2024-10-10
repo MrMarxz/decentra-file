@@ -13,10 +13,6 @@ import { decodeJWT, encodeJWT } from "thirdweb/utils";
 import { createAuth, verifySignature } from "thirdweb/auth";
 
 import { db } from "@/server/db";
-import { createThirdwebClient } from "thirdweb";
-import { env } from "@/env";
-
-import { localhost } from "thirdweb/chains";
 
 /**
  * 1. CONTEXT

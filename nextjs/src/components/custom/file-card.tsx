@@ -25,6 +25,9 @@ const FileCard = ({
     accountUsername: string | null
 }) => {
     const utils = api.useUtils();
+
+    const transactionUrl = `https://base-sepolia.blockscout.com/tx/${file.txHash}`;
+
     const [hasLiked, setHasLiked] = useState(false);
     const [hasDisliked, setHasDisliked] = useState(false);
     const [likedAmount, setLikedAmount] = useState(file.likes);
@@ -134,7 +137,8 @@ const FileCard = ({
                     </div>
                     <div className="mt-4">
                         <a
-                            href="#"
+                            href={transactionUrl}
+                            target="_blank"
                             className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold 
                             bg-emerald-100 text-emerald-800 
                             hover:bg-emerald-200 hover:text-emerald-900 

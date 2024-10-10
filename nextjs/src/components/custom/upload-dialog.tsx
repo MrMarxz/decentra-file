@@ -6,7 +6,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { createThirdwebClient, getContract, prepareContractCall } from "thirdweb";
-import { localhost } from "thirdweb/chains";
+import { 
+  localhost,
+  baseSepolia,
+} from "thirdweb/chains";
 import { useSendTransaction } from "thirdweb/react";
 import toast from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
@@ -21,7 +24,6 @@ import { RefreshCw, Upload, File as FileIcon, X } from 'lucide-react';
 import useWallet from '@/store/useWallet';
 import { env } from '@/env';
 
-const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 const client = createThirdwebClient({ clientId: env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID });
 
 interface FileData {
@@ -37,8 +39,8 @@ export default function ModernUploadFileDialog() {
   const utils = api.useUtils();
   const contract = getContract({
     client,
-    address: contractAddress,
-    chain: localhost,
+    address: env.NEXT_PUBLIC_CONTRACT_ADDRESS,
+    chain: baseSepolia,
   });
   const { mutate: sendTx, data: transactionResult } = useSendTransaction();
   const upload = api.files.create.useMutation();

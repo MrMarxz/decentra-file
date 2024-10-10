@@ -45,6 +45,7 @@ const FileDetailsDialog = ({ file, accountUsername, like, dislike }: FileDetails
     const [isDislikeLoading, setIsDislikeLoading] = useState(dislike.isLoading);
 
     const ipfsUrl = `https://${env.NEXT_PUBLIC_IPFS_DOMAIN}/ipfs/${file.cid}`;
+    const transactionUrl = `https://base-sepolia.blockscout.com/tx/${file.txHash}`;
     const {
         name,
         fileName,
@@ -120,7 +121,7 @@ const FileDetailsDialog = ({ file, accountUsername, like, dislike }: FileDetails
                                             <TooltipProvider>
                                                 <Tooltip>
                                                     <TooltipTrigger asChild>
-                                                        <Link href="#" className="flex flex-row gap-x-2 hover:text-[#007F7F]">
+                                                        <Link href={transactionUrl} className="flex flex-row gap-x-2 hover:text-[#007F7F]" target="_blank">
                                                             <Hash className="w-5 h-5 text-gray-500" />
                                                             <span className="truncate">Transaction Hash: {formatTransactionHash(txHash)}</span>
                                                         </Link>

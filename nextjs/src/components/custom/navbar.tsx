@@ -3,7 +3,7 @@
 import React from 'react';
 import { ConnectButton } from "thirdweb/react";
 import { createWallet } from "thirdweb/wallets";
-import { polygon, localhost } from "thirdweb/chains";
+import { polygon, localhost, baseSepolia } from "thirdweb/chains";
 import { createThirdwebClient } from "thirdweb";
 import { generatePayload, isLoggedIn, login, logout } from "@/actions/login";
 import { env } from '@/env';
@@ -31,7 +31,7 @@ const Navbar = () => {
                         <div className="pr-2 sm:pr-4">
                             <ConnectButton
                                 wallets={wallets}
-                                chains={[localhost]}
+                                chains={[baseSepolia]}
                                 client={client}
                                 connectButton={{
                                     className: "!w-32 !h-10 !px-4 !py-2 !text-sm !font-medium !rounded-md !bg-[#007F7F] !text-white !hover:bg-[#007F7F] !focus:outline-none !focus:ring-2 !focus:ring-offset-2 !focus:ring-[#007F7F]",
