@@ -39,15 +39,18 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
 
   // Verify the token
   let session = null;
-  if (token) {
-    // console.log("Token: ", token);
-    const decoded = decodeJWT(token);
-    if (decoded) {
-      session = decoded;
+  try {
+    if (token) {
+      const decoded = decodeJWT(token);
+      if (decoded) {
+        session = decoded;
+      }
     }
+  } catch (error) {
+    // Clear the session if the token is invalid
+    console.error("Invalid token while checking validity: ", error);
+    session = null;
   }
-
-  // const session = token ? decodeJWT(token) : null;
 
   return {
     db,

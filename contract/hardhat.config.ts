@@ -9,6 +9,11 @@ const config: HardhatUserConfig = {
     hardhat: {
       chainId: 1337
     },
+    // 'base-sepolia': {
+    //   url: 'https://sepolia.base.org',
+    //   accounts: [process.env.WALLET_KEY as string],
+    //   gasPrice: 1000000000,
+    // },
   },
   paths: {
     sources: "./contracts",

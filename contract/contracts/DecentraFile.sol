@@ -21,7 +21,7 @@ contract DecentraFile is Ownable {
     uint256 public fileCount;
 
     event FileUploaded(uint256 indexed fileId, string cid, address uploader, string name, string category, string[] tags);
-    event TagsUpdated(uint256 indexed fileId, string[] newTags);
+    // event TagsUpdated(uint256 indexed fileId, string[] newTags);
 
     constructor() Ownable(msg.sender) {}
 
@@ -44,28 +44,28 @@ contract DecentraFile is Ownable {
         return fileCount;
     }
 
-    function updateFileMetadata(uint256 _fileId, string memory _name, string memory _description, string memory _category) public {
-        require(_fileId > 0 && _fileId <= fileCount, "Invalid file ID");
-        require(msg.sender == files[_fileId].uploader, "Only the uploader can update file metadata");
+    // function updateFileMetadata(uint256 _fileId, string memory _name, string memory _description, string memory _category) public {
+    //     require(_fileId > 0 && _fileId <= fileCount, "Invalid file ID");
+    //     require(msg.sender == files[_fileId].uploader, "Only the uploader can update file metadata");
 
-        File storage file = files[_fileId];
-        file.name = _name;
-        file.description = _description;
-        file.category = _category;
-    }
+    //     File storage file = files[_fileId];
+    //     file.name = _name;
+    //     file.description = _description;
+    //     file.category = _category;
+    // }
 
-    function updateTags(uint256 _fileId, string[] memory _newTags) public {
-        require(_fileId > 0 && _fileId <= fileCount, "Invalid file ID");
-        require(msg.sender == files[_fileId].uploader, "Only the uploader can update tags");
+    // function updateTags(uint256 _fileId, string[] memory _newTags) public {
+    //     require(_fileId > 0 && _fileId <= fileCount, "Invalid file ID");
+    //     require(msg.sender == files[_fileId].uploader, "Only the uploader can update tags");
 
-        files[_fileId].tags = _newTags;
-        emit TagsUpdated(_fileId, _newTags);
-    }
+    //     files[_fileId].tags = _newTags;
+    //     emit TagsUpdated(_fileId, _newTags);
+    // }
 
-    function deleteFile(uint256 _fileId) public {
-        require(_fileId > 0 && _fileId <= fileCount, "Invalid file ID");
-        require(msg.sender == files[_fileId].uploader || msg.sender == owner(), "Only the uploader or contract owner can delete the file");
+    // function deleteFile(uint256 _fileId) public {
+    //     require(_fileId > 0 && _fileId <= fileCount, "Invalid file ID");
+    //     require(msg.sender == files[_fileId].uploader || msg.sender == owner(), "Only the uploader or contract owner can delete the file");
 
-        delete files[_fileId];
-    }
+    //     delete files[_fileId];
+    // }
 }

@@ -56,7 +56,6 @@ export declare namespace DecentraFile {
 export interface DecentraFileInterface extends Interface {
   getFunction(
     nameOrSignature:
-      | "deleteFile"
       | "fileCount"
       | "files"
       | "getFile"
@@ -64,22 +63,13 @@ export interface DecentraFileInterface extends Interface {
       | "owner"
       | "renounceOwnership"
       | "transferOwnership"
-      | "updateFileMetadata"
-      | "updateTags"
       | "uploadFile"
   ): FunctionFragment;
 
   getEvent(
-    nameOrSignatureOrTopic:
-      | "FileUploaded"
-      | "OwnershipTransferred"
-      | "TagsUpdated"
+    nameOrSignatureOrTopic: "FileUploaded" | "OwnershipTransferred"
   ): EventFragment;
 
-  encodeFunctionData(
-    functionFragment: "deleteFile",
-    values: [BigNumberish]
-  ): string;
   encodeFunctionData(functionFragment: "fileCount", values?: undefined): string;
   encodeFunctionData(functionFragment: "files", values: [BigNumberish]): string;
   encodeFunctionData(
@@ -100,19 +90,10 @@ export interface DecentraFileInterface extends Interface {
     values: [AddressLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "updateFileMetadata",
-    values: [BigNumberish, string, string, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "updateTags",
-    values: [BigNumberish, string[]]
-  ): string;
-  encodeFunctionData(
     functionFragment: "uploadFile",
     values: [string, string, string, string, string[]]
   ): string;
 
-  decodeFunctionResult(functionFragment: "deleteFile", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "fileCount", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "files", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getFile", data: BytesLike): Result;
@@ -129,11 +110,6 @@ export interface DecentraFileInterface extends Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "updateFileMetadata",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "updateTags", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "uploadFile", data: BytesLike): Result;
 }
 
@@ -174,19 +150,6 @@ export namespace OwnershipTransferredEvent {
   export interface OutputObject {
     previousOwner: string;
     newOwner: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
-export namespace TagsUpdatedEvent {
-  export type InputTuple = [fileId: BigNumberish, newTags: string[]];
-  export type OutputTuple = [fileId: bigint, newTags: string[]];
-  export interface OutputObject {
-    fileId: bigint;
-    newTags: string[];
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -237,12 +200,6 @@ export interface DecentraFile extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
-  deleteFile: TypedContractMethod<
-    [_fileId: BigNumberish],
-    [void],
-    "nonpayable"
-  >;
-
   fileCount: TypedContractMethod<[], [bigint], "view">;
 
   files: TypedContractMethod<
@@ -278,23 +235,6 @@ export interface DecentraFile extends BaseContract {
     "nonpayable"
   >;
 
-  updateFileMetadata: TypedContractMethod<
-    [
-      _fileId: BigNumberish,
-      _name: string,
-      _description: string,
-      _category: string
-    ],
-    [void],
-    "nonpayable"
-  >;
-
-  updateTags: TypedContractMethod<
-    [_fileId: BigNumberish, _newTags: string[]],
-    [void],
-    "nonpayable"
-  >;
-
   uploadFile: TypedContractMethod<
     [
       _cid: string,
@@ -311,9 +251,6 @@ export interface DecentraFile extends BaseContract {
     key: string | FunctionFragment
   ): T;
 
-  getFunction(
-    nameOrSignature: "deleteFile"
-  ): TypedContractMethod<[_fileId: BigNumberish], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "fileCount"
   ): TypedContractMethod<[], [bigint], "view">;
@@ -353,25 +290,6 @@ export interface DecentraFile extends BaseContract {
     nameOrSignature: "transferOwnership"
   ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
   getFunction(
-    nameOrSignature: "updateFileMetadata"
-  ): TypedContractMethod<
-    [
-      _fileId: BigNumberish,
-      _name: string,
-      _description: string,
-      _category: string
-    ],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "updateTags"
-  ): TypedContractMethod<
-    [_fileId: BigNumberish, _newTags: string[]],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
     nameOrSignature: "uploadFile"
   ): TypedContractMethod<
     [
@@ -399,13 +317,6 @@ export interface DecentraFile extends BaseContract {
     OwnershipTransferredEvent.OutputTuple,
     OwnershipTransferredEvent.OutputObject
   >;
-  getEvent(
-    key: "TagsUpdated"
-  ): TypedContractEvent<
-    TagsUpdatedEvent.InputTuple,
-    TagsUpdatedEvent.OutputTuple,
-    TagsUpdatedEvent.OutputObject
-  >;
 
   filters: {
     "FileUploaded(uint256,string,address,string,string,string[])": TypedContractEvent<
@@ -428,17 +339,6 @@ export interface DecentraFile extends BaseContract {
       OwnershipTransferredEvent.InputTuple,
       OwnershipTransferredEvent.OutputTuple,
       OwnershipTransferredEvent.OutputObject
-    >;
-
-    "TagsUpdated(uint256,string[])": TypedContractEvent<
-      TagsUpdatedEvent.InputTuple,
-      TagsUpdatedEvent.OutputTuple,
-      TagsUpdatedEvent.OutputObject
-    >;
-    TagsUpdated: TypedContractEvent<
-      TagsUpdatedEvent.InputTuple,
-      TagsUpdatedEvent.OutputTuple,
-      TagsUpdatedEvent.OutputObject
     >;
   };
 }
