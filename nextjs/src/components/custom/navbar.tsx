@@ -41,7 +41,12 @@ const Navbar = () => {
                                     isLoggedIn: async (address) => {
                                         console.log("checking if logged in!", { address });
                                         const isConnected = await isLoggedIn();
-                                        walletStore.setIsWalletConnected(isConnected);
+                                        walletStore.isWalletConnected = isConnected;
+                                        
+                                        if (isConnected) {
+                                            walletStore.connectedAddress = address;
+                                        }
+
                                         return isConnected;
                                     },
                                     doLogin: async (params) => {
