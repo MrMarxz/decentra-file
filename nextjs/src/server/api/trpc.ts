@@ -31,7 +31,10 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
   // Get the Bearer token from the Authorization header
   const authorization = opts.headers.get("cookie");
   // console.log("Authorization: ", authorization);
-  const token = authorization?.replace("jwt=", "");
+  // const token = authorization?.replace("jwt=", "");
+
+  // Only get the jwt cookie
+  const token = authorization?.split("; ").find((c) => c.startsWith("jwt="))?.replace("jwt=", "");
 
   // Verify the token
   let session = null;
