@@ -49,10 +49,6 @@ export async function login(payload: VerifyLoginPayloadParams) {
       });
     }
   }
-  else {
-    // Remove the JWT cookie if the payload is not valid
-    cookies().delete("jwt");
-  }
 }
 
 export async function isLoggedIn() {
