@@ -275,16 +275,6 @@ export const fileRouter = createTRPCRouter({
   // Get commuinty files with likes and dislikes
   getCommunityFiles: publicProcedure
     .query(async ({ ctx }) => {
-
-      /*
-        Return objects: [
-            {
-                hasLiked: true,
-                hasDisliked: false,
-                file: {}
-            }
-        ]
-      */
       const accountAddress = ctx?.session?.payload.sub;
       const files = await db.files.findMany({
         where: {
