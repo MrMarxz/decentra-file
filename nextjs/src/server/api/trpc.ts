@@ -45,6 +45,8 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
   } catch (error) {
     // Clear the session if the token is invalid
     console.error("Invalid token while checking validity: ", error);
+    console.error("Authorization: ", authorization);
+    console.error("Token: ", token);
     session = null;
   }
 
