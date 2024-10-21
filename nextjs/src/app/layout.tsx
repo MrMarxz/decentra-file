@@ -19,6 +19,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
+        <head>
+          <script defer src="https://cloud.umami.is/script.js" data-website-id="52c4ae44-53af-4ea2-b408-e32d33a6219c"></script>
+        </head>
         <ThirdwebProvider>
           <TRPCReactProvider>
             <Toaster />
