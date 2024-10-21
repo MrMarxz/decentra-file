@@ -11,11 +11,10 @@ interface AuthLayoutProps {
 }
 
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
-    const walletStore = useWallet();
 
     return (
         <>
-            {walletStore.isWalletConnected && <FAB />}
+            <FAB />
             {children}
         </>
     )
